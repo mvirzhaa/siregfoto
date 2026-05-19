@@ -4,6 +4,9 @@ import { cookies } from 'next/headers'
 export interface AdminSession {
   isLoggedIn: boolean
   loginAt?: string
+  // Step 1 passed, waiting for TOTP
+  pendingTotpUserId?: string
+  pendingTotpAt?: string
 }
 
 export const sessionOptions: SessionOptions = {

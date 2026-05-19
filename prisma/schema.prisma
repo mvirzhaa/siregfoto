@@ -20,6 +20,28 @@ enum JenisLayanan {
   CAP_ONLY
 }
 
+// ── Admin User ───────────────────────────────────────────────────────────────
+
+model AdminUser {
+  id           String  @id @default(cuid())
+  username     String  @unique
+  email        String  @unique // Email untuk terima OTP
+  passwordHash String
+  aktif        Boolean @default(true)
+
+  // Email OTP
+  otpCode   String? // Hashed OTP
+  otpExpiry DateTime? // Berlaku 5 menit
+
+  // Brute force tracking
+  failedAttempts Int       @default(0)
+  lockedUntil    DateTime?
+  lastLoginAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 // ── Master Data ──────────────────────────────────────────────────────────────
 
 model MasterFakultas {
