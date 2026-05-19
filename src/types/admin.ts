@@ -42,3 +42,27 @@ export type RegistrasiData = {
   createdAt: string
   updatedAt: string
 }
+
+// ── Master Data ──────────────────────────────────────────────────────────────
+
+export type MasterFakultas = {
+  id: string
+  nama: string
+  kode: string
+  urutan: number
+  aktif: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export type MasterProdi = {
+  id: string
+  nama: string
+  kode: string
+  urutan: number
+  aktif: boolean
+  fakultasId: string
+  fakultas?: Pick<MasterFakultas, 'id' | 'nama' | 'kode'>
+  createdAt: string
+  updatedAt: string
+}

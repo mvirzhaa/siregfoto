@@ -14,13 +14,13 @@ import toast from 'react-hot-toast'
 export default function AdminDashboardPage() {
   const [data, setData] = useState<RegistrasiData[]>([])
   const [stats, setStats] = useState<AdminStats>({})
-  const [pagination, setPagination] = useState<PaginationMeta>({
-    page: 1, limit: 20, total: 0, totalPages: 1,
-  })
+  const [pagination, setPagination] = useState<PaginationMeta>({ page: 1, limit: 20, total: 0, totalPages: 1 })
   const [loading, setLoading] = useState(true)
 
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('ALL')
+  const [fakultas, setFakultas] = useState('')
+  const [programStudi, setProgramStudi] = useState('')
   const [page, setPage] = useState(1)
 
   const fetchData = useCallback(async () => {
@@ -29,12 +29,11 @@ export default function AdminDashboardPage() {
       const params = new URLSearchParams({ page: String(page), limit: '20' })
       if (search) params.set('search', search)
       if (status !== 'ALL') params.set('status', status)
+      if (fakultas) params.set('fakultas', fakultas)
+      if (programStudi) params.set('programStudi', programStudi)
 
       const res = await fetch(`/api/admin/pendaftar?${params}`)
-      if (res.status === 401) {
-        window.location.href = '/admin/login'
-        return
-      }
+      if (res.status === 401) { window.location.href = '/admin/login'; return }
       const json = await res.json()
       if (json.success) {
         setData(json.data)
@@ -46,50 +45,34 @@ export default function AdminDashboardPage() {
     } finally {
       setLoading(false)
     }
-  }, [search, status, page])
+  }, [search, status, fakultas, programStudi, page])
 
   // Debounce search
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setPage(1)
-      fetchData()
-    }, search ? 400 : 0)
-    return () => clearTimeout(timer)
+    const t = setTimeout(() => { setPage(1); fetchData() }, search ? 400 : 0)
+    return () => clearTimeout(t)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
-  useEffect(() => {
-    fetchData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, page])
+  useEffect(() => { fetchData() }, [fetchData]) // eslint-disable-line
 
   function handleReset() {
-    setSearch('')
-    setStatus('ALL')
-    setPage(1)
+    setSearch(''); setStatus('ALL'); setFakultas(''); setProgramStudi(''); setPage(1)
   }
 
   return (
     <div className="min-h-screen flex flex-col">
       <AdminHeader />
-
       <main className="flex-1 py-6 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto space-y-6">
-          {/* Page Title */}
+
+          {/* Title */}
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold text-slate-800">Dashboard</h1>
-              <p className="text-sm text-slate-500 mt-0.5">
-                Kelola pendaftaran foto ijazah & sidik jari
-              </p>
+              <p className="text-sm text-slate-500 mt-0.5">Kelola pendaftaran foto ijazah &amp; sidik jari</p>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              icon={<RefreshCw size={14} />}
-              onClick={fetchData}
-              loading={loading}
-            >
+            <Button variant="ghost" size="sm" icon={<RefreshCw size={14} />} onClick={fetchData} loading={loading}>
               Refresh
             </Button>
           </div>
@@ -98,17 +81,22 @@ export default function AdminDashboardPage() {
           <DashboardStats stats={stats} />
 
           {/* Filter + Export */}
-          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-            <div className="flex-1 w-full">
-              <FilterBar
-                search={search}
-                status={status}
-                onSearchChange={setSearch}
-                onStatusChange={(v) => { setStatus(v); setPage(1) }}
-                onReset={handleReset}
+          <div className="flex flex-col gap-3">
+            <FilterBar
+              search={search} status={status} fakultas={fakultas} programStudi={programStudi}
+              onSearchChange={setSearch}
+              onStatusChange={(v) => { setStatus(v); setPage(1) }}
+              onFakultasChange={(v) => { setFakultas(v); setPage(1) }}
+              onProdiChange={(v) => { setProgramStudi(v); setPage(1) }}
+              onReset={handleReset}
+            />
+            <div className="flex justify-end">
+              <ExportButton
+                status={status !== 'ALL' ? status : undefined}
+                fakultas={fakultas || undefined}
+                programStudi={programStudi || undefined}
               />
             </div>
-            <ExportButton status={status !== 'ALL' ? status : undefined} />
           </div>
 
           {/* Tabel */}
@@ -120,28 +108,12 @@ export default function AdminDashboardPage() {
           {pagination.totalPages > 1 && (
             <div className="flex items-center justify-between text-sm">
               <p className="text-slate-500">
-                Menampilkan {(page - 1) * pagination.limit + 1}–
-                {Math.min(page * pagination.limit, pagination.total)} dari{' '}
-                {pagination.total} pendaftar
+                Menampilkan {(page - 1) * pagination.limit + 1}–{Math.min(page * pagination.limit, pagination.total)} dari {pagination.total} pendaftar
               </p>
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  icon={<ChevronLeft size={14} />}
-                  disabled={page <= 1}
-                  onClick={() => setPage((p) => p - 1)}
-                >
-                  Prev
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page >= pagination.totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                >
-                  Next
-                  <ChevronRight size={14} className="ml-1" />
+                <Button variant="outline" size="sm" icon={<ChevronLeft size={14} />} disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Prev</Button>
+                <Button variant="outline" size="sm" disabled={page >= pagination.totalPages} onClick={() => setPage(p => p + 1)}>
+                  Next <ChevronRight size={14} className="ml-1" />
                 </Button>
               </div>
             </div>

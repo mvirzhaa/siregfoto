@@ -1,20 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
-import { DAFTAR_FAKULTAS, JAM_TERSEDIA } from '@/lib/constants'
+import { JAM_TERSEDIA } from '@/lib/constants'
 import type { RegistrasiInput } from '@/types/registrasi'
 
 type FormErrors = Partial<Record<keyof RegistrasiInput, string>>
 
-const FAKULTAS_OPTIONS = DAFTAR_FAKULTAS.map((f) => ({ value: f, label: f }))
+interface FakultasOption { id: string; nama: string; kode: string }
+interface ProdiOption    { id: string; nama: string; kode: string; fakultasId: string }
+
 const JAM_OPTIONS = JAM_TERSEDIA.map((j) => ({ value: j, label: `${j} WIB` }))
 
-// Minimal tanggal: hari ini
 function getTodayString() {
   return new Date().toISOString().split('T')[0]
 }
@@ -23,6 +24,11 @@ export function FormRegistrasi() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
+
+  // Master data
+  const [fakultasList, setFakultasList] = useState<FakultasOption[]>([])
+  const [prodiList, setProdiList] = useState<ProdiOption[]>([])
+  const [loadingMaster, setLoadingMaster] = useState(true)
 
   const [form, setForm] = useState<RegistrasiInput>({
     nama: '',
@@ -34,8 +40,33 @@ export function FormRegistrasi() {
     waktuPilihan: '' as RegistrasiInput['waktuPilihan'],
   })
 
+  // Load daftar fakultas saat mount
+  useEffect(() => {
+    fetch('/api/master/fakultas')
+      .then(r => r.json())
+      .then(j => { if (j.success) setFakultasList(j.data) })
+      .catch(() => toast.error('Gagal memuat daftar fakultas'))
+      .finally(() => setLoadingMaster(false))
+  }, [])
+
+  // Load prodi saat fakultas berubah
+  useEffect(() => {
+    if (!form.fakultas) { setProdiList([]); return }
+    const fak = fakultasList.find(f => f.nama === form.fakultas)
+    if (!fak) { setProdiList([]); return }
+    fetch(`/api/master/prodi?fakultasId=${fak.id}`)
+      .then(r => r.json())
+      .then(j => { if (j.success) setProdiList(j.data) })
+      .catch(() => {})
+  }, [form.fakultas, fakultasList])
+
   function handleChange(field: keyof RegistrasiInput, value: string) {
-    setForm((prev) => ({ ...prev, [field]: value }))
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+      // Reset prodi jika fakultas diganti
+      ...(field === 'fakultas' ? { programStudi: '' } : {}),
+    }))
     setErrors((prev) => ({ ...prev, [field]: undefined }))
   }
 
@@ -68,7 +99,6 @@ export function FormRegistrasi() {
       }
 
       toast.success('Pendaftaran berhasil!')
-      // Simpan data sukses ke sessionStorage untuk halaman sukses
       sessionStorage.setItem('registrasi_sukses', JSON.stringify(json.data))
       router.push('/daftar/sukses')
     } catch {
@@ -77,6 +107,9 @@ export function FormRegistrasi() {
       setLoading(false)
     }
   }
+
+  const FAKULTAS_OPTIONS = fakultasList.map(f => ({ value: f.nama, label: f.nama }))
+  const PRODI_OPTIONS    = prodiList.map(p => ({ value: p.nama, label: p.nama }))
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
@@ -117,23 +150,36 @@ export function FormRegistrasi() {
               autoComplete="email"
             />
           </div>
+
+          {/* Fakultas */}
           <Select
             label="Fakultas"
-            placeholder="— Pilih Fakultas —"
+            placeholder={loadingMaster ? 'Memuat...' : '— Pilih Fakultas —'}
             value={form.fakultas}
             onChange={(e) => handleChange('fakultas', e.target.value)}
             options={FAKULTAS_OPTIONS}
             error={errors.fakultas}
             required
           />
-          <Input
-            label="Program Studi"
-            placeholder="Nama program studi Anda"
-            value={form.programStudi}
-            onChange={(e) => handleChange('programStudi', e.target.value)}
-            error={errors.programStudi}
-            required
-          />
+
+          {/* Program Studi — muncul setelah fakultas dipilih */}
+          <div className={form.fakultas ? '' : 'opacity-60 pointer-events-none'}>
+            <Select
+              label="Program Studi"
+              placeholder={
+                !form.fakultas
+                  ? 'Pilih fakultas terlebih dahulu'
+                  : prodiList.length === 0
+                  ? 'Memuat...'
+                  : '— Pilih Program Studi —'
+              }
+              value={form.programStudi}
+              onChange={(e) => handleChange('programStudi', e.target.value)}
+              options={PRODI_OPTIONS}
+              error={errors.programStudi}
+              required
+            />
+          </div>
         </div>
       </div>
 
@@ -164,14 +210,7 @@ export function FormRegistrasi() {
         </div>
       </div>
 
-      {/* Submit */}
-      <Button
-        type="submit"
-        variant="primary"
-        size="lg"
-        loading={loading}
-        className="w-full"
-      >
+      <Button type="submit" variant="primary" size="lg" loading={loading} className="w-full">
         {loading ? 'Mendaftarkan...' : 'Daftar Sekarang'}
       </Button>
     </form>

@@ -26,7 +26,7 @@ const UIKA_YELLOW = 'facc15'
 
 export async function generateLaporanExcel(
   data: RegistrasiRow[],
-  filter?: { status?: string; dateFrom?: string; dateTo?: string }
+  filter?: { status?: string; dateFrom?: string; dateTo?: string; fakultas?: string; programStudi?: string }
 ): Promise<Buffer> {
   const workbook = new ExcelJS.Workbook()
   workbook.creator = 'SiRegFoto UIKA'
@@ -59,6 +59,8 @@ export async function generateLaporanExcel(
     sheet.mergeCells('A3:N3')
     const filterParts: string[] = []
     if (filter.status && filter.status !== 'ALL') filterParts.push(`Status: ${filter.status}`)
+    if (filter.fakultas) filterParts.push(`Fakultas: ${filter.fakultas}`)
+    if (filter.programStudi) filterParts.push(`Prodi: ${filter.programStudi}`)
     if (filter.dateFrom) filterParts.push(`Dari: ${filter.dateFrom}`)
     if (filter.dateTo) filterParts.push(`Sampai: ${filter.dateTo}`)
     const filterCell = sheet.getCell('A3')

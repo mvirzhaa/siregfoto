@@ -6,6 +6,8 @@ datasource db {
   provider = "postgresql"
 }
 
+// ── Enums ────────────────────────────────────────────────────────────────────
+
 enum StatusRegistrasi {
   PENDING
   VALIDATED
@@ -18,16 +20,38 @@ enum JenisLayanan {
   CAP_ONLY
 }
 
-enum Fakultas {
-  FKIP
-  FIKES
-  FATEK
-  FEKON
-  FAPERTA
-  FAI
-  FISIPOL
-  PASCASARJANA
+// ── Master Data ──────────────────────────────────────────────────────────────
+
+model MasterFakultas {
+  id        String        @id @default(cuid())
+  nama      String
+  kode      String        @unique
+  aktif     Boolean       @default(true)
+  urutan    Int           @default(0)
+  prodi     MasterProdi[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([aktif])
 }
+
+model MasterProdi {
+  id         String         @id @default(cuid())
+  nama       String
+  kode       String
+  aktif      Boolean        @default(true)
+  urutan     Int            @default(0)
+  fakultas   MasterFakultas @relation(fields: [fakultasId], references: [id], onDelete: Cascade)
+  fakultasId String
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@unique([kode, fakultasId])
+  @@index([fakultasId])
+  @@index([aktif])
+}
+
+// ── Registrasi ───────────────────────────────────────────────────────────────
 
 model Registrasi {
   id              String @id @default(cuid())
@@ -37,8 +61,8 @@ model Registrasi {
   nama         String
   npm          String
   gmail        String
-  fakultas     String
-  programStudi String
+  fakultas     String // Nama fakultas (dari MasterFakultas.nama)
+  programStudi String // Nama prodi (dari MasterProdi.nama)
 
   // Jadwal yang dipilih user
   tanggalPilihan DateTime
@@ -52,8 +76,8 @@ model Registrasi {
   status StatusRegistrasi @default(PENDING)
 
   // Admin metadata
-  catatanAdmin   String? // Catatan opsional dari admin
-  divalidasiOleh String? // Nama/ID admin yang validasi
+  catatanAdmin   String?
+  divalidasiOleh String?
   divalidasiAt   DateTime?
   disetujuiAt    DateTime?
 
@@ -69,6 +93,8 @@ model Registrasi {
   @@index([status])
   @@index([npm])
   @@index([gmail])
+  @@index([fakultas])
+  @@index([programStudi])
   @@index([tanggalPilihan])
   @@index([createdAt])
 }

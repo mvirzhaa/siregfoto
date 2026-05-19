@@ -9,9 +9,11 @@ interface ExportButtonProps {
   status?: string
   dateFrom?: string
   dateTo?: string
+  fakultas?: string
+  programStudi?: string
 }
 
-export function ExportButton({ status, dateFrom, dateTo }: ExportButtonProps) {
+export function ExportButton({ status, dateFrom, dateTo, fakultas, programStudi }: ExportButtonProps) {
   const [loading, setLoading] = useState(false)
 
   async function handleExport() {
@@ -21,6 +23,8 @@ export function ExportButton({ status, dateFrom, dateTo }: ExportButtonProps) {
       if (status) params.set('status', status)
       if (dateFrom) params.set('dateFrom', dateFrom)
       if (dateTo) params.set('dateTo', dateTo)
+      if (fakultas) params.set('fakultas', fakultas)
+      if (programStudi) params.set('programStudi', programStudi)
 
       const res = await fetch(`/api/admin/export?${params.toString()}`)
 

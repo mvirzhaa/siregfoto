@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { LogOut, LayoutDashboard, FileSpreadsheet } from 'lucide-react'
+import { LogOut, LayoutDashboard, FileSpreadsheet, Database } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export function AdminHeader() {
@@ -48,6 +48,13 @@ export function AdminHeader() {
           >
             <FileSpreadsheet size={15} />
             <span className="hidden sm:inline">Laporan</span>
+          </Link>
+          <Link
+            href="/admin/master"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-uika-200 hover:text-white hover:bg-uika-800 rounded-lg text-sm transition-colors"
+          >
+            <Database size={15} />
+            <span className="hidden sm:inline">Master Data</span>
           </Link>
           <button
             onClick={handleLogout}
