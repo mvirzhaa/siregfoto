@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+echo "🚀 SiRegFoto UIKA — Starting up..."
+
+# Jalankan migrasi database sebelum start app
+echo "📦 Menjalankan migrasi database..."
+npx prisma migrate deploy
+
+echo "✅ Migrasi selesai. Menjalankan aplikasi..."
+exec node server.js

@@ -3,7 +3,7 @@ import { getIronSession } from 'iron-session'
 import type { AdminSession } from '@/lib/session'
 import { sessionOptions } from '@/lib/session'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Proteksi semua /admin kecuali /admin/login

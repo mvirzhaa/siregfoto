@@ -1,0 +1,47 @@
+services:
+  # ── PostgreSQL Database ─────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: siregfoto_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: siregfoto
+    ports:
+      - "5433:5432"
+    volumes:
+      - siregfoto_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d siregfoto"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Next.js App (opsional — gunakan hanya untuk full-stack Docker) ───────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: siregfoto_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/siregfoto
+      ADMIN_PIN: ${ADMIN_PIN:-admin123}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET:-koderahasia1234567890123456789012345}
+      GMAIL_USER: ${GMAIL_USER:-}
+      GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD:-}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      NEXT_PUBLIC_APP_NAME: SiRegFoto UIKA
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    profiles:
+      - full
+
+volumes:
+  siregfoto_pgdata:
+    name: siregfoto_pgdata

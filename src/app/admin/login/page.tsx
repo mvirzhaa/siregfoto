@@ -1,14 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { Lock, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import type { Metadata } from 'next'
+import { Spinner } from '@/components/ui/Spinner'
 
-// Metadata tidak bisa di 'use client', tapi bisa di layout kalau diperlukan
-export default function AdminLoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') ?? '/admin'
@@ -51,6 +50,48 @@ export default function AdminLoginPage() {
   }
 
   return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="flex flex-col gap-1">
+        <label htmlFor="pin" className="text-sm font-medium text-slate-700">
+          PIN Admin <span className="text-red-500">*</span>
+        </label>
+        <div className="relative">
+          <input
+            id="pin"
+            type={showPin ? 'text' : 'password'}
+            value={pin}
+            onChange={(e) => setPin(e.target.value)}
+            placeholder="Masukkan PIN"
+            autoComplete="current-password"
+            className="w-full rounded-lg border border-slate-200 px-3 py-2 pr-10 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-uika-700 focus:border-transparent hover:border-uika-400 transition-colors"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPin((v) => !v)}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+            aria-label={showPin ? 'Sembunyikan PIN' : 'Tampilkan PIN'}
+          >
+            {showPin ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+      </div>
+
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        loading={loading}
+        className="w-full"
+      >
+        {loading ? 'Masuk...' : 'Masuk'}
+      </Button>
+    </form>
+  )
+}
+
+export default function AdminLoginPage() {
+  return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-uika-gradient">
       <div className="w-full max-w-sm">
         {/* Logo */}
@@ -69,43 +110,10 @@ export default function AdminLoginPage() {
             <h2 className="text-base font-semibold text-slate-800">Masuk dengan PIN</h2>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="pin" className="text-sm font-medium text-slate-700">
-                PIN Admin <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <input
-                  id="pin"
-                  type={showPin ? 'text' : 'password'}
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  placeholder="Masukkan PIN"
-                  autoComplete="current-password"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 pr-10 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-uika-700 focus:border-transparent hover:border-uika-400 transition-colors"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPin((v) => !v)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                  aria-label={showPin ? 'Sembunyikan PIN' : 'Tampilkan PIN'}
-                >
-                  {showPin ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              loading={loading}
-              className="w-full"
-            >
-              {loading ? 'Masuk...' : 'Masuk'}
-            </Button>
-          </form>
+          {/* Suspense wraps useSearchParams */}
+          <Suspense fallback={<Spinner size="sm" text="Memuat..." />}>
+            <LoginForm />
+          </Suspense>
         </div>
 
         <p className="text-center text-uika-400 text-xs mt-4">
