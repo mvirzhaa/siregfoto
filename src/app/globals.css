@@ -1,26 +1,50 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --uika-green:        #15803d;
+  --uika-green-dark:   #166534;
+  --uika-green-light:  #22c55e;
+  --uika-yellow:       #facc15;
+  --uika-yellow-dark:  #eab308;
+  --uika-yellow-light: #fef08a;
+  --uika-bg:           #f0fdf4;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * { box-sizing: border-box; }
+  
+  body {
+    @apply text-slate-800;
+    background: linear-gradient(160deg, #f0fdf4 0%, #f8fafc 60%, #fefce8 100%);
+    min-height: 100vh;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-semibold;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Scrollbar UIKA */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f0fdf4; }
+  ::-webkit-scrollbar-thumb { background: #15803d; border-radius: 3px; }
+  
+  /* Focus ring UIKA */
+  .uika-focus {
+    @apply focus:outline-none focus:ring-2 focus:ring-uika-700 focus:ring-offset-2;
+  }
+  
+  /* Card animasi */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-uika hover:-translate-y-0.5;
+  }
+  
+  /* Status badge */
+  .badge-pending    { @apply bg-amber-100 text-amber-800 border border-amber-200; }
+  .badge-validated  { @apply bg-blue-100 text-blue-800 border border-blue-200; }
+  .badge-approved   { @apply bg-uika-100 text-uika-800 border border-uika-200; }
+  .badge-completed  { @apply bg-slate-100 text-slate-700 border border-slate-200; }
 }

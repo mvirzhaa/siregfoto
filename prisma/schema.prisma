@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StatusRegistrasi {
+  PENDING
+  VALIDATED
+  APPROVED
+  COMPLETED
+}
+
+enum JenisLayanan {
+  FOTO_CAP
+  CAP_ONLY
+}
+
+enum Fakultas {
+  FKIP
+  FIKES
+  FATEK
+  FEKON
+  FAPERTA
+  FAI
+  FISIPOL
+  PASCASARJANA
+}
+
+model Registrasi {
+  id              String @id @default(cuid())
+  nomorRegistrasi String @unique // Format: REG-YYYYMMDD-XXXX
+
+  // Data Mahasiswa
+  nama         String
+  npm          String
+  gmail        String
+  fakultas     String
+  programStudi String
+
+  // Jadwal yang dipilih user
+  tanggalPilihan DateTime
+  waktuPilihan   String // "08:00", "09:00", dst
+
+  // Data Layanan (diisi admin saat validasi)
+  jenisLayanan JenisLayanan?
+  nominal      Int? // 15000 atau 10000 (dalam rupiah)
+
+  // Status & Tracking
+  status StatusRegistrasi @default(PENDING)
+
+  // Admin metadata
+  catatanAdmin   String? // Catatan opsional dari admin
+  divalidasiOleh String? // Nama/ID admin yang validasi
+  divalidasiAt   DateTime?
+  disetujuiAt    DateTime?
+
+  // Email kwitansi
+  kwitansiTerkirim   Boolean   @default(false)
+  kwitansiTerkirimAt DateTime?
+  nomorKwitansi      String? // Format: KWT-YYYYMMDD-XXXX
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([npm])
+  @@index([gmail])
+  @@index([tanggalPilihan])
+  @@index([createdAt])
+}
