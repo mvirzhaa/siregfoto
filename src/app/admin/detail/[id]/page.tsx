@@ -80,9 +80,31 @@ export default function DetailPage() {
       const json = await res.json()
       if (json.success) {
         toast.success(json.message ?? 'Berhasil disetujui')
-        setData((prev) => prev ? { ...prev, status: 'COMPLETED', kwitansiTerkirim: true } : prev)
+        if (json.data) {
+          setData(json.data)
+        } else {
+          setData((prev) => prev ? { ...prev, status: 'COMPLETED', kwitansiTerkirim: true } : prev)
+        }
       } else {
         toast.error(json.message ?? 'Gagal menyetujui')
+      }
+    } catch {
+      toast.error('Terjadi kesalahan jaringan')
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  async function handleResend() {
+    setActionLoading(true)
+    try {
+      const res = await fetch(`/api/admin/resend/${id}`, { method: 'POST' })
+      const json = await res.json()
+      if (json.success) {
+        toast.success(json.message ?? 'Kwitansi berhasil dikirim ulang')
+        if (json.data) setData(json.data)
+      } else {
+        toast.error(json.message ?? 'Gagal mengirim ulang kwitansi')
       }
     } catch {
       toast.error('Terjadi kesalahan jaringan')
@@ -272,10 +294,49 @@ export default function DetailPage() {
             </Card>
           )}
 
+          {/* Aksi: APPROVED (Email Kwitansi Gagal) */}
+          {data.status === 'APPROVED' && (
+            <Card className="border-amber-200 bg-amber-50">
+              <CardHeader>
+                <h2 className="text-sm font-semibold text-amber-800 flex items-center gap-2">
+                  <Mail size={16} className="text-amber-600" />
+                  Pengiriman Email Kwitansi Gagal
+                </h2>
+              </CardHeader>
+              <CardBody>
+                <p className="text-sm text-amber-700">
+                  Pendaftaran telah disetujui, tetapi email kwitansi gagal dikirim ke <strong>{data.gmail}</strong>. Anda dapat mencoba mengirim kembali kwitansi ke email tersebut.
+                </p>
+              </CardBody>
+              <CardFooter>
+                <Button
+                  variant="primary"
+                  size="md"
+                  loading={actionLoading}
+                  icon={<Mail size={15} />}
+                  onClick={handleResend}
+                  className="w-full bg-amber-600 hover:bg-amber-700 border-transparent text-white"
+                >
+                  Kirim Ulang Kwitansi
+                </Button>
+              </CardFooter>
+            </Card>
+          )}
+
           {/* Status COMPLETED */}
           {data.status === 'COMPLETED' && (
-            <div className="bg-uika-50 border border-uika-200 rounded-xl p-4 text-center text-sm text-uika-700 font-medium">
-              ✅ Pendaftaran ini sudah selesai diproses.
+            <div className="bg-uika-50 border border-uika-200 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-uika-700 font-medium">
+              <span>✅ Pendaftaran ini sudah selesai diproses.</span>
+              <Button
+                variant="secondary"
+                size="sm"
+                loading={actionLoading}
+                icon={<Mail size={13} />}
+                onClick={handleResend}
+                className="text-xs py-1 px-3 w-full sm:w-auto"
+              >
+                Kirim Ulang Email
+              </Button>
             </div>
           )}
         </div>

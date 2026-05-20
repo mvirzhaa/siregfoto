@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { generateKwitansiHtml } from './emailTemplates'
+import { generateKwitansiPdf } from './pdf'
 
 interface RegistrasiForEmail {
   nomorKwitansi: string | null
@@ -52,11 +53,21 @@ export async function sendKwitansi(data: RegistrasiForEmail): Promise<void> {
     disetujuiAt: data.disetujuiAt,
   })
 
+  // Generate the PDF attachment
+  const pdfBuffer = await generateKwitansiPdf(data)
+
   await transporter.sendMail({
     from: `"SiRegFoto UIKA" <${process.env.GMAIL_USER}>`,
     to: data.gmail,
     subject: `Kwitansi Pembayaran ${data.nomorKwitansi} — SiRegFoto UIKA`,
     html: htmlContent,
+    attachments: [
+      {
+        filename: `Kwitansi-${data.nomorKwitansi}.pdf`,
+        content: pdfBuffer,
+        contentType: 'application/pdf',
+      },
+    ],
   })
 }
 

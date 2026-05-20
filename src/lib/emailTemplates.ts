@@ -123,7 +123,8 @@ export function generateKwitansiHtml(data: KwitansiData): string {
 
               <!-- Catatan -->
               <p style="margin:0;color:#6b7280;font-size:12px;line-height:1.6;">
-                Simpan email ini sebagai bukti pembayaran resmi. Jika ada pertanyaan, hubungi admin SiRegFoto UIKA.<br/>
+                <strong>PENTING:</strong> Kami telah melampirkan file <strong>Kwitansi Pembayaran Resmi (PDF)</strong> pada email ini. Silakan unduh dan simpan atau cetak untuk dibawa saat jadwal pelayanan Anda.<br/><br/>
+                Jika ada pertanyaan, hubungi admin SiRegFoto UIKA.<br/>
                 Email ini dikirim otomatis oleh sistem — mohon tidak membalas email ini.
               </p>
 
