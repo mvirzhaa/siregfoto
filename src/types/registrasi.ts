@@ -15,8 +15,7 @@ export const RegistrasiSchema = z.object({
 
   gmail: z
     .string()
-    .email('Format email tidak valid')
-    .endsWith('@gmail.com', 'Harus menggunakan akun Gmail (@gmail.com)'),
+    .email('Format email tidak valid'),
 
   fakultas: z.string().min(2, 'Pilih fakultas'),
 

@@ -91,7 +91,7 @@ export async function generateLaporanExcel(
   ]
 
   const headers = [
-    'No', 'No. Registrasi', 'Nama Mahasiswa', 'NPM', 'Gmail',
+    'No', 'No. Registrasi', 'Nama Mahasiswa', 'NPM', 'Email',
     'Fakultas', 'Program Studi', 'Tanggal Pilih', 'Jam',
     'Jenis Layanan', 'Nominal', 'Status', 'No. Kwitansi', 'Tgl Daftar',
   ]

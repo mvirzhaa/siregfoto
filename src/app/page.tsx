@@ -46,7 +46,7 @@ const ALUR = [
     step: '04',
     icon: Mail,
     title: 'Terima Kwitansi',
-    desc: 'Kwitansi pembayaran dikirim otomatis ke Gmail Anda setelah selesai.',
+    desc: 'Kwitansi pembayaran dikirim otomatis ke email Anda setelah selesai.',
   },
 ]
 

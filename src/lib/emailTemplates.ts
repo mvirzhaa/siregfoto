@@ -90,7 +90,7 @@ export function generateKwitansiHtml(data: KwitansiData): string {
                 ${row('Nomor Registrasi', data.nomorRegistrasi)}
                 ${row('Nama Lengkap', data.nama)}
                 ${row('NPM', data.npm)}
-                ${row('Gmail', data.gmail)}
+                ${row('Email', data.gmail)}
                 ${row('Fakultas', data.fakultas)}
                 ${row('Program Studi', data.programStudi)}
                 <tr><td colspan="3" style="height:16px;"></td></tr>

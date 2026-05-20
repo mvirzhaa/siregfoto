@@ -68,7 +68,7 @@ export function SuksesCard({ data }: SuksesCardProps) {
           <li>Simpan nomor registrasi Anda</li>
           <li>Datang tepat waktu sesuai jadwal</li>
           <li>Bawa KTM dan berpakaian rapi</li>
-          <li>Kwitansi pembayaran akan dikirim ke Gmail setelah layanan selesai</li>
+          <li>Kwitansi pembayaran akan dikirim ke email setelah layanan selesai</li>
         </ul>
       </div>
 

@@ -12,7 +12,7 @@ import { Card, CardBody, CardFooter, CardHeader } from '@/components/ui/Card'
 import { formatRupiah, formatTanggal, formatDateTime } from '@/lib/utils'
 import { HARGA, LABEL_LAYANAN } from '@/lib/constants'
 import type { RegistrasiData } from '@/types/admin'
-import { ArrowLeft, Mail, CheckCheck, ClipboardCheck, Image, Upload, Trash2 } from 'lucide-react'
+import { ArrowLeft, Mail, CheckCheck, ClipboardCheck, Image, Upload, Trash2, Edit2, Save, X } from 'lucide-react'
 import Link from 'next/link'
 
 export default function DetailPage() {
@@ -32,6 +32,15 @@ export default function DetailPage() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
   const [sendingPhoto, setSendingPhoto] = useState(false)
 
+  // State untuk edit data pendaftar oleh admin
+  const [isEditing, setIsEditing] = useState(false)
+  const [editNama, setEditNama] = useState('')
+  const [editNpm, setEditNpm] = useState('')
+  const [editGmail, setEditGmail] = useState('')
+  const [editFakultas, setEditFakultas] = useState('')
+  const [editProgramStudi, setEditProgramStudi] = useState('')
+  const [saveLoading, setSaveLoading] = useState(false)
+
   useEffect(() => {
     async function fetchDetail() {
       try {
@@ -42,6 +51,11 @@ export default function DetailPage() {
           setData(json.data)
           if (json.data.jenisLayanan) setJenisLayanan(json.data.jenisLayanan)
           if (json.data.catatanAdmin) setCatatanAdmin(json.data.catatanAdmin)
+          setEditNama(json.data.nama || '')
+          setEditNpm(json.data.npm || '')
+          setEditGmail(json.data.gmail || '')
+          setEditFakultas(json.data.fakultas || '')
+          setEditProgramStudi(json.data.programStudi || '')
         } else {
           toast.error('Data tidak ditemukan')
           router.push('/admin')
@@ -176,6 +190,51 @@ export default function DetailPage() {
     }
   }
 
+  async function handleSaveEdit() {
+    if (!editNama.trim() || !editNpm.trim() || !editGmail.trim() || !editFakultas.trim() || !editProgramStudi.trim()) {
+      toast.error('Semua data wajib diisi')
+      return
+    }
+
+    setSaveLoading(true)
+    try {
+      const res = await fetch(`/api/admin/pendaftar/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nama: editNama,
+          npm: editNpm,
+          gmail: editGmail,
+          fakultas: editFakultas,
+          programStudi: editProgramStudi,
+        }),
+      })
+      const json = await res.json()
+      if (json.success) {
+        toast.success('Data pendaftar berhasil diperbarui')
+        setData(json.data)
+        setIsEditing(false)
+      } else {
+        toast.error(json.message ?? 'Gagal memperbarui data')
+      }
+    } catch {
+      toast.error('Terjadi kesalahan jaringan')
+    } finally {
+      setSaveLoading(false)
+    }
+  }
+
+  function handleCancelEdit() {
+    if (data) {
+      setEditNama(data.nama)
+      setEditNpm(data.npm)
+      setEditGmail(data.gmail)
+      setEditFakultas(data.fakultas)
+      setEditProgramStudi(data.programStudi)
+    }
+    setIsEditing(false)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -205,33 +264,145 @@ export default function DetailPage() {
           </Link>
 
           {/* Header Card */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs text-slate-400 font-mono">{data.nomorRegistrasi}</p>
-                  <h1 className="text-lg font-bold text-slate-800 mt-0.5">{data.nama}</h1>
-                  <p className="text-sm text-slate-500">{data.npm} — {data.gmail}</p>
-                </div>
-                <Badge status={data.status} />
-              </div>
-            </CardHeader>
-            <CardBody>
-              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                {[
-                  ['Fakultas', data.fakultas],
-                  ['Program Studi', data.programStudi],
-                  ['Jadwal', `${formatTanggal(data.tanggalPilihan)}, ${data.waktuPilihan} WIB`],
-                  ['Tgl Daftar', formatDateTime(data.createdAt)],
-                ].map(([label, value]) => (
-                  <div key={label}>
-                    <dt className="text-xs text-slate-400">{label}</dt>
-                    <dd className="text-slate-800 font-medium mt-0.5">{value}</dd>
+          {isEditing ? (
+            <Card className="border-uika-500 ring-1 ring-uika-500/20">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-semibold text-uika-700">Edit Data Pendaftar</h2>
+                    <p className="text-xs text-slate-400 font-mono mt-0.5">{data.nomorRegistrasi}</p>
                   </div>
-                ))}
-              </dl>
-            </CardBody>
-          </Card>
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </CardHeader>
+              <CardBody className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Nama */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-500">Nama Lengkap</label>
+                    <input
+                      type="text"
+                      value={editNama}
+                      onChange={(e) => setEditNama(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-uika-700 focus:border-transparent hover:border-uika-400 transition-colors"
+                    />
+                  </div>
+
+                  {/* NPM */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-500">NPM</label>
+                    <input
+                      type="text"
+                      value={editNpm}
+                      onChange={(e) => setEditNpm(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-uika-700 focus:border-transparent hover:border-uika-400 transition-colors"
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div className="flex flex-col gap-1 sm:col-span-2">
+                    <label className="text-xs font-semibold text-slate-500">Email</label>
+                    <input
+                      type="email"
+                      value={editGmail}
+                      onChange={(e) => setEditGmail(e.target.value)}
+                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-uika-700 focus:border-transparent hover:border-uika-400 transition-colors"
+                    />
+                  </div>
+
+                  {/* Fakultas */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-500">Fakultas</label>
+                    <input
+                      type="text"
+                      value={editFakultas}
+                      onChange={(e) => setEditFakultas(e.target.value)}
+                      placeholder="Contoh: Fakultas Agama Islam"
+                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-uika-700 focus:border-transparent hover:border-uika-400 transition-colors"
+                    />
+                  </div>
+
+                  {/* Program Studi */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-500">Program Studi</label>
+                    <input
+                      type="text"
+                      value={editProgramStudi}
+                      onChange={(e) => setEditProgramStudi(e.target.value)}
+                      placeholder="Contoh: Pendidikan Agama Islam"
+                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-uika-700 focus:border-transparent hover:border-uika-400 transition-colors"
+                    />
+                  </div>
+                </div>
+              </CardBody>
+              <CardFooter className="flex items-center justify-end gap-2 bg-slate-50 border-t border-slate-100">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleCancelEdit}
+                  disabled={saveLoading}
+                >
+                  Batal
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  loading={saveLoading}
+                  onClick={handleSaveEdit}
+                  icon={<Save size={13} />}
+                >
+                  Simpan Perubahan
+                </Button>
+              </CardFooter>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs text-slate-400 font-mono">{data.nomorRegistrasi}</p>
+                    <h1 className="text-lg font-bold text-slate-800 mt-0.5">{data.nama}</h1>
+                    <p className="text-sm text-slate-500">{data.npm} — {data.gmail}</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <Badge status={data.status} />
+                    {(data.status === 'PENDING' || data.status === 'VALIDATED') && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        icon={<Edit2 size={13} />}
+                        onClick={() => setIsEditing(true)}
+                        className="text-xs py-1 px-2.5 h-auto text-slate-600 border-slate-200 hover:border-uika-400 hover:text-uika-700"
+                      >
+                        Edit Data
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardBody>
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  {[
+                    ['Fakultas', data.fakultas],
+                    ['Program Studi', data.programStudi],
+                    ['Jadwal', `${formatTanggal(data.tanggalPilihan)}, ${data.waktuPilihan} WIB`],
+                    ['Tgl Daftar', formatDateTime(data.createdAt)],
+                  ].map(([label, value]) => (
+                    <div key={label}>
+                      <dt className="text-xs text-slate-400">{label}</dt>
+                      <dd className="text-slate-800 font-medium mt-0.5">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </CardBody>
+            </Card>
+          )}
 
           {/* Layanan Card (jika sudah validated) */}
           {data.status !== 'PENDING' && data.jenisLayanan && data.nominal && (

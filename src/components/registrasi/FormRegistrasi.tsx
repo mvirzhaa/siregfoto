@@ -139,9 +139,9 @@ export function FormRegistrasi() {
               autoComplete="off"
             />
             <Input
-              label="Gmail"
+              label="Email"
               type="email"
-              placeholder="nama@gmail.com"
+              placeholder="contoh@email.com"
               value={form.gmail}
               onChange={(e) => handleChange('gmail', e.target.value)}
               error={errors.gmail}
