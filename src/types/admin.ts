@@ -39,6 +39,8 @@ export type RegistrasiData = {
   kwitansiTerkirim: boolean
   kwitansiTerkirimAt: string | null
   nomorKwitansi: string | null
+  fotoHasilTerkirim: boolean
+  fotoHasilTerkirimAt: string | null
   createdAt: string
   updatedAt: string
 }

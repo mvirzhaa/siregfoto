@@ -108,6 +108,10 @@ model Registrasi {
   kwitansiTerkirimAt DateTime?
   nomorKwitansi      String? // Format: KWT-YYYYMMDD-XXXX
 
+  // Email foto hasil
+  fotoHasilTerkirim   Boolean   @default(false)
+  fotoHasilTerkirimAt DateTime?
+
   // Timestamps
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

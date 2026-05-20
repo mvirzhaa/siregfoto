@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { generateKwitansiHtml } from './emailTemplates'
+import { generateKwitansiHtml, generateFotoHasilHtml } from './emailTemplates'
 import { generateKwitansiPdf } from './pdf'
 
 interface RegistrasiForEmail {
@@ -123,5 +123,30 @@ export async function sendOtpEmail(toEmail: string, otpCode: string, username: s
     to: toEmail,
     subject: `[${otpCode}] Kode Login Admin SiRegFoto`,
     html,
+  })
+}
+
+export async function sendFotoHasil(
+  email: string,
+  nama: string,
+  fileBuffer: Buffer,
+  filename: string,
+  mimeType: string
+): Promise<void> {
+  const transporter = createTransporter()
+  const htmlContent = generateFotoHasilHtml(nama)
+
+  await transporter.sendMail({
+    from: `"SiRegFoto UIKA" <${process.env.GMAIL_USER}>`,
+    to: email,
+    subject: `Foto Hasil Cetak Ijazah — SiRegFoto UIKA`,
+    html: htmlContent,
+    attachments: [
+      {
+        filename,
+        content: fileBuffer,
+        contentType: mimeType,
+      },
+    ],
   })
 }

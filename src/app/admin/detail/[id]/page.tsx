@@ -12,7 +12,7 @@ import { Card, CardBody, CardFooter, CardHeader } from '@/components/ui/Card'
 import { formatRupiah, formatTanggal, formatDateTime } from '@/lib/utils'
 import { HARGA, LABEL_LAYANAN } from '@/lib/constants'
 import type { RegistrasiData } from '@/types/admin'
-import { ArrowLeft, Mail, CheckCheck, ClipboardCheck } from 'lucide-react'
+import { ArrowLeft, Mail, CheckCheck, ClipboardCheck, Image, Upload, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 
 export default function DetailPage() {
@@ -26,6 +26,11 @@ export default function DetailPage() {
   // Validasi form state
   const [jenisLayanan, setJenisLayanan] = useState<'FOTO_CAP' | 'CAP_ONLY' | ''>('')
   const [catatanAdmin, setCatatanAdmin] = useState('')
+
+  // State untuk kirim foto hasil
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const [sendingPhoto, setSendingPhoto] = useState(false)
 
   useEffect(() => {
     async function fetchDetail() {
@@ -110,6 +115,64 @@ export default function DetailPage() {
       toast.error('Terjadi kesalahan jaringan')
     } finally {
       setActionLoading(false)
+    }
+  }
+
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('File harus berupa gambar (JPEG, PNG, dll).')
+      return
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Ukuran file foto maksimal adalah 10MB.')
+      return
+    }
+
+    setPhotoFile(file)
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setPhotoPreview(reader.result as string)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  function handleRemovePhoto() {
+    setPhotoFile(null)
+    setPhotoPreview(null)
+  }
+
+  async function handleSendPhoto() {
+    if (!photoFile) {
+      toast.error('Silakan pilih file foto terlebih dahulu.')
+      return
+    }
+
+    setSendingPhoto(true)
+    const formData = new FormData()
+    formData.append('file', photoFile)
+
+    try {
+      const res = await fetch(`/api/admin/send-photo/${id}`, {
+        method: 'POST',
+        body: formData,
+      })
+      const json = await res.json()
+      if (json.success) {
+        toast.success(json.message ?? 'Foto hasil berhasil dikirim ke email.')
+        if (json.data) setData(json.data)
+        setPhotoFile(null)
+        setPhotoPreview(null)
+      } else {
+        toast.error(json.message ?? 'Gagal mengirim foto.')
+      }
+    } catch {
+      toast.error('Terjadi kesalahan jaringan.')
+    } finally {
+      setSendingPhoto(false)
     }
   }
 
@@ -318,6 +381,88 @@ export default function DetailPage() {
                   className="w-full bg-amber-600 hover:bg-amber-700 border-transparent text-white"
                 >
                   Kirim Ulang Kwitansi
+                </Button>
+              </CardFooter>
+            </Card>
+          )}
+
+          {/* Aksi: Kirim Foto Hasil (APPROVED atau COMPLETED) */}
+          {(data.status === 'APPROVED' || data.status === 'COMPLETED') && (
+            <Card>
+              <CardHeader>
+                <h2 className="text-sm font-semibold text-uika-700 flex items-center gap-2">
+                  <Image size={16} />
+                  Kirim Foto Hasil Ijazah
+                </h2>
+              </CardHeader>
+              <CardBody className="space-y-4">
+                <p className="text-sm text-slate-600">
+                  Unggah file foto hasil ijazah yang sudah diedit untuk dikirim ke email mahasiswa.
+                </p>
+
+                {data.fotoHasilTerkirim && data.fotoHasilTerkirimAt && (
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-sm text-emerald-800 flex items-center gap-2">
+                    <CheckCheck size={16} className="text-emerald-600 flex-shrink-0" />
+                    <span>
+                      Foto hasil sudah pernah dikirim pada{' '}
+                      <strong>{formatTanggal(new Date(data.fotoHasilTerkirimAt))}</strong> pukul{' '}
+                      <strong>{new Date(data.fotoHasilTerkirimAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB</strong>.
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-6 bg-slate-50 hover:bg-slate-100 hover:border-uika-400 transition-colors relative">
+                  {photoPreview ? (
+                    <div className="text-center space-y-3 w-full">
+                      <img
+                        src={photoPreview}
+                        alt="Preview Foto Hasil"
+                        className="max-h-48 rounded-lg border border-slate-200 shadow-sm mx-auto object-contain"
+                      />
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-xs text-slate-500 font-mono max-w-[200px] truncate">
+                          {photoFile?.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleRemovePhoto}
+                          className="text-red-500 hover:text-red-700 p-1"
+                          title="Hapus foto"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center cursor-pointer w-full h-full py-4">
+                      <Upload className="text-slate-400 mb-2" size={24} />
+                      <span className="text-sm font-semibold text-uika-700 hover:text-uika-800">
+                        Pilih File Foto
+                      </span>
+                      <span className="text-xs text-slate-400 mt-1">
+                        Format: JPG, PNG, WEBP (Maksimal 10MB)
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoChange}
+                        className="hidden"
+                      />
+                    </label>
+                  )}
+                </div>
+              </CardBody>
+              <CardFooter>
+                <Button
+                  variant="primary"
+                  size="md"
+                  loading={sendingPhoto}
+                  disabled={!photoFile}
+                  icon={<Image size={15} />}
+                  onClick={handleSendPhoto}
+                  className="w-full"
+                >
+                  Kirim Foto Hasil ke Email
                 </Button>
               </CardFooter>
             </Card>
