@@ -1,5 +1,4 @@
 import PDFDocument from 'pdfkit'
-import QRCode from 'qrcode'
 import { formatRupiah, formatTanggal } from './utils'
 import { LABEL_LAYANAN } from './constants'
 
@@ -46,10 +45,6 @@ export async function generateKwitansiPdf(data: RegistrasiForEmail): Promise<Buf
   const layananString = data.jenisLayanan ? LABEL_LAYANAN[data.jenisLayanan] : '-'
   const tanggalLayanan = formatTanggal(data.tanggalPilihan)
   const tanggalApprove = data.disetujuiAt ? formatTanggal(data.disetujuiAt) : formatTanggal(new Date())
-
-  // Generate QR Code as Buffer
-  const qrDataText = `Nomor Kwitansi: ${data.nomorKwitansi}\nNama: ${data.nama}\nNPM: ${data.npm}\nLayanan: ${layananString}\nStatus: LUNAS\nVerifikasi: BPPSI UIKA BOGOR`
-  const qrBuffer = await QRCode.toBuffer(qrDataText, { margin: 1, width: 150 })
 
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ size: 'A4', margin: 40 })
@@ -150,13 +145,6 @@ export async function generateKwitansiPdf(data: RegistrasiForEmail): Promise<Buf
 
     // Footer section
     const footerY = boxY + 80
-    
-    // QR Code on the left
-    doc.image(qrBuffer, 50, footerY, { width: 90, height: 90 })
-    doc.fillColor('#9ca3af')
-       .font('Helvetica-Oblique')
-       .fontSize(6.5)
-       .text('Pindai QR Code untuk verifikasi keaslian dokumen.', 50, footerY + 95, { width: 120 })
 
     // Signature on the right
     const sigX = 300
