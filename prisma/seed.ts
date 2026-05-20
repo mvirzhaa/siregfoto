@@ -7,86 +7,93 @@ const prisma = new PrismaClient({ adapter } as ConstructorParameters<typeof Pris
 
 const SEED_DATA = [
   {
-    kode: 'FKIP',
-    nama: 'Fakultas Keguruan dan Ilmu Pendidikan',
+    kode: 'FAI',
+    nama: 'Fakultas Agama Islam',
     urutan: 1,
     prodi: [
-      { kode: 'PAUD', nama: 'Pendidikan Anak Usia Dini', urutan: 1 },
-      { kode: 'PGSD', nama: 'Pendidikan Guru Sekolah Dasar', urutan: 2 },
-      { kode: 'PBSI', nama: 'Pendidikan Bahasa & Sastra Indonesia', urutan: 3 },
-      { kode: 'PBI',  nama: 'Pendidikan Bahasa Inggris', urutan: 4 },
-      { kode: 'PMAT', nama: 'Pendidikan Matematika', urutan: 5 },
+      { kode: 'PAI', nama: 'Pendidikan Agama Islam', urutan: 1 },
+      { kode: 'HKI', nama: 'Hukum Keluarga Islam (Ahwal Syakhshiyyah)', urutan: 2 },
+      { kode: 'KPI', nama: 'Komunikasi dan Penyiaran Islam', urutan: 3 },
+      { kode: 'ESY', nama: 'Ekonomi Syariah', urutan: 4 },
+      { kode: 'PGMI', nama: 'Pendidikan Guru Madrasah Ibtidaiyah', urutan: 5 },
+      { kode: 'BKPI', nama: 'Bimbingan dan Konseling Pendidikan Islam', urutan: 6 },
+      { kode: 'MHU', nama: 'Manajemen Haji dan Umroh', urutan: 7 },
+      { kode: 'IAT', nama: 'Ilmu Al-Qur\'an dan Tafsir', urutan: 8 },
+    ],
+  },
+  {
+    kode: 'FTS',
+    nama: 'Fakultas Teknik dan Sains',
+    urutan: 2,
+    prodi: [
+      { kode: 'TS', nama: 'Teknik Sipil', urutan: 1 },
+      { kode: 'TM', nama: 'Teknik Mesin', urutan: 2 },
+      { kode: 'TE', nama: 'Teknik Elektro', urutan: 3 },
+      { kode: 'TIF', nama: 'Teknik Informatika', urutan: 4 },
+      { kode: 'SI', nama: 'Sistem Informasi', urutan: 5 },
+      { kode: 'RPB', nama: 'Rekayasa Pertanian dan Biosistem', urutan: 6 },
+      { kode: 'IL', nama: 'Ilmu Lingkungan', urutan: 7 },
+    ],
+  },
+  {
+    kode: 'FEB',
+    nama: 'Fakultas Ekonomi dan Bisnis',
+    urutan: 3,
+    prodi: [
+      { kode: 'MNJ', nama: 'Manajemen', urutan: 1 },
+      { kode: 'AKUN', nama: 'Akuntansi', urutan: 2 },
+      { kode: 'KP', nama: 'Keuangan dan Perbankan', urutan: 3 },
+    ],
+  },
+  {
+    kode: 'FKIP',
+    nama: 'Fakultas Keguruan dan Ilmu Pendidikan',
+    urutan: 4,
+    prodi: [
+      { kode: 'PBI', nama: 'Pendidikan Bahasa Inggris', urutan: 1 },
+      { kode: 'PLS', nama: 'Pendidikan Luar Sekolah (Pendidikan Masyarakat)', urutan: 2 },
+      { kode: 'TP', nama: 'Teknologi Pendidikan', urutan: 3 },
+      { kode: 'PVDF', nama: 'Pendidikan Vokasional Desain Fashion', urutan: 4 },
+    ],
+  },
+  {
+    kode: 'FH',
+    nama: 'Fakultas Hukum',
+    urutan: 5,
+    prodi: [
+      { kode: 'IH', nama: 'Ilmu Hukum', urutan: 1 },
     ],
   },
   {
     kode: 'FIKES',
     nama: 'Fakultas Ilmu Kesehatan',
-    urutan: 2,
-    prodi: [
-      { kode: 'KESMAS',  nama: 'Kesehatan Masyarakat', urutan: 1 },
-      { kode: 'FARMASI', nama: 'Farmasi', urutan: 2 },
-    ],
-  },
-  {
-    kode: 'FATEK',
-    nama: 'Fakultas Teknik',
-    urutan: 3,
-    prodi: [
-      { kode: 'TS',  nama: 'Teknik Sipil', urutan: 1 },
-      { kode: 'TI',  nama: 'Teknik Industri', urutan: 2 },
-      { kode: 'TIF', nama: 'Teknik Informatika', urutan: 3 },
-    ],
-  },
-  {
-    kode: 'FEKON',
-    nama: 'Fakultas Ekonomi',
-    urutan: 4,
-    prodi: [
-      { kode: 'MNJ',  nama: 'Manajemen', urutan: 1 },
-      { kode: 'AKUN', nama: 'Akuntansi', urutan: 2 },
-      { kode: 'ESP',  nama: 'Ekonomi Syariah & Perbankan', urutan: 3 },
-    ],
-  },
-  {
-    kode: 'FAPERTA',
-    nama: 'Fakultas Pertanian',
-    urutan: 5,
-    prodi: [
-      { kode: 'AGR', nama: 'Agroteknologi', urutan: 1 },
-    ],
-  },
-  {
-    kode: 'FAI',
-    nama: 'Fakultas Agama Islam',
     urutan: 6,
     prodi: [
-      { kode: 'PAI',  nama: 'Pendidikan Agama Islam', urutan: 1 },
-      { kode: 'HKI',  nama: 'Hukum Keluarga Islam', urutan: 2 },
-      { kode: 'ESY',  nama: 'Ekonomi Syariah', urutan: 3 },
-      { kode: 'KPI',  nama: 'Komunikasi dan Penyiaran Islam', urutan: 4 },
-    ],
-  },
-  {
-    kode: 'FISIPOL',
-    nama: 'Fakultas Ilmu Sosial dan Politik',
-    urutan: 7,
-    prodi: [
-      { kode: 'ADMNEG', nama: 'Administrasi Negara', urutan: 1 },
-      { kode: 'ILKOM',  nama: 'Ilmu Komunikasi', urutan: 2 },
+      { kode: 'KM', nama: 'Kesehatan Masyarakat', urutan: 1 },
+      { kode: 'GIZI', nama: 'Gizi', urutan: 2 },
     ],
   },
   {
     kode: 'PASCA',
-    nama: 'Program Pascasarjana',
-    urutan: 8,
+    nama: 'Sekolah Pascasarjana',
+    urutan: 7,
     prodi: [
-      { kode: 'MPI',  nama: 'Manajemen Pendidikan Islam', urutan: 1 },
-      { kode: 'MKEU', nama: 'Manajemen Keuangan dan Perbankan Syariah', urutan: 2 },
+      { kode: 'MM', nama: 'Magister Manajemen', urutan: 1 },
+      { kode: 'MTP', nama: 'Magister Teknologi Pendidikan', urutan: 2 },
+      { kode: 'MPAI', nama: 'Magister Pendidikan Agama Islam', urutan: 3 },
+      { kode: 'MES', nama: 'Magister Ekonomi Syariah', urutan: 4 },
+      { kode: 'MKPI', nama: 'Magister Komunikasi dan Penyiaran Islam', urutan: 5 },
+      { kode: 'DPI', nama: 'Doktor Pendidikan Islam', urutan: 6 },
+      { kode: 'DES', nama: 'Doktor Ekonomi Syariah', urutan: 7 },
     ],
   },
 ]
 
 async function main() {
+  console.log('🧹 Cleaning existing master data...')
+  await prisma.masterProdi.deleteMany({})
+  await prisma.masterFakultas.deleteMany({})
+
   console.log('🌱 Seeding master data fakultas & prodi...')
 
   for (const fak of SEED_DATA) {

@@ -28,12 +28,12 @@ export const JAM_TERSEDIA = [
 ] as const
 
 export const DAFTAR_FAKULTAS = [
-  'FKIP — Fakultas Keguruan dan Ilmu Pendidikan',
-  'FIKES — Fakultas Ilmu Kesehatan',
-  'FATEK — Fakultas Teknik',
-  'FEKON — Fakultas Ekonomi',
-  'FAPERTA — Fakultas Pertanian',
   'FAI — Fakultas Agama Islam',
-  'FISIPOL — Fakultas Ilmu Sosial dan Politik',
-  'PASCASARJANA — Program Pascasarjana',
+  'FTS — Fakultas Teknik dan Sains',
+  'FEB — Fakultas Ekonomi dan Bisnis',
+  'FKIP — Fakultas Keguruan dan Ilmu Pendidikan',
+  'FH — Fakultas Hukum',
+  'FIKES — Fakultas Ilmu Kesehatan',
+  'PASCA — Sekolah Pascasarjana',
 ] as const
+
