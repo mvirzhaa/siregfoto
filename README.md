@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SiRegFoto — Registrasi Foto Ijazah & Sidik Jari UIKA
 
-## Getting Started
+SiRegFoto adalah Sistem Registrasi Foto Ijazah dan Sidik Jari untuk mahasiswa Universitas Ibn Khaldun (UIKA) Bogor. Sistem ini dikelola oleh Biro Perencanaan, Pelaporan & Sistem Informasi (BPPSI) UIKA.
 
-First, run the development server:
+Aplikasi ini dibangun menggunakan [Next.js](https://nextjs.org/) (App Router), [Tailwind CSS](https://tailwindcss.com/), dan [Prisma ORM](https://www.prisma.io/).
+
+## Fitur Utama
+
+- **Pendaftaran Online**: Mahasiswa dapat mendaftar untuk sesi foto dan rekam sidik jari serta memilih jadwal kedatangan.
+- **Manajemen Layanan**: Mendukung pilihan layanan (Foto + Cap 3 Jari atau hanya Cap 3 Jari).
+- **Kwitansi Digital**: Menghasilkan kwitansi dalam format PDF yang otomatis dikirim setelah sesi selesai.
+- **Notifikasi Email**: Mengirimkan konfirmasi pendaftaran langsung ke email pendaftar.
+- **Admin Dashboard**: Disediakan untuk staf BPPSI dalam mengelola data pendaftar, jadwal, dan pelaporan (termasuk export ke Excel).
+
+## Persyaratan Sistem
+
+- Node.js >= 18.x
+- PostgreSQL
+
+## Cara Memulai (Development)
+
+1. Clone repositori ini.
+2. Salin `.env.example` ke `.env` (atau `.env.local`) dan sesuaikan nilai konfigurasi di dalamnya, terutama `DATABASE_URL`.
+3. Instal dependensi:
+
+```bash
+npm install
+```
+
+4. Sinkronisasikan skema Prisma dengan database:
+
+```bash
+npx prisma db push
+```
+
+5. (Opsional) Jalankan seed database jika diperlukan:
+
+```bash
+npm run db:seed
+```
+
+6. Jalankan server pengembangan:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat aplikasi berjalan.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Script yang Tersedia
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Beberapa perintah tambahan yang bisa dijalankan di dalam proyek:
 
-## Learn More
+- `npm run admin:create` — Membuat user admin baru (CLI).
+- `npm run admin:update` — Memperbarui password/data admin (CLI).
+- `npm run build` — Membangun aplikasi untuk production.
+- `npm run lint` — Memeriksa gaya penulisan kode (linting).
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Aplikasi ini dapat di-deploy ke Vercel atau menggunakan kontainer. Untuk deployment menggunakan Docker, silakan merujuk pada `docker-compose.yml` dan dokumentasi deployment yang terlampir pada `DOCKER.md` atau `DEPLOY.md`.
