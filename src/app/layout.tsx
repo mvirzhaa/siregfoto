@@ -10,7 +10,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'SiRegFoto — Registrasi Foto Ijazah & Sidik Jari UIKA',
+  title: 'Studio BPPSI — Registrasi Foto Ijazah & Sidik Jari UIKA',
   description: 'Sistem Registrasi Foto Ijazah dan Scan Sidik Jari Universitas Ibn Khaldun Bogor',
   icons: { icon: '/favicon.ico' },
 }

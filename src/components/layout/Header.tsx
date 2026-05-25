@@ -10,7 +10,7 @@ export function Header() {
             <span className="text-uika-900 font-black text-xs">SR</span>
           </div>
           <div>
-            <span className="text-white font-bold text-base leading-none">SiRegFoto</span>
+            <span className="text-white font-bold text-base leading-none">Studio BPPSI</span>
             <span className="block text-uika-300 text-xs leading-none mt-0.5">BPPSI — UIKA Bogor</span>
           </div>
         </Link>

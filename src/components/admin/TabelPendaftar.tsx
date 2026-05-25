@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Eye } from 'lucide-react'
+import { Eye, ImageOff, ImageIcon } from 'lucide-react'
 import { Table, Thead, Tbody, Th, Td, Tr } from '@/components/ui/Table'
 import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
@@ -39,6 +39,7 @@ export function TabelPendaftar({ data, loading }: TabelPendaftarProps) {
           <Th className="hidden md:table-cell">Jadwal</Th>
           <Th className="hidden lg:table-cell">Tgl Daftar</Th>
           <Th>Status</Th>
+          <Th className="hidden sm:table-cell text-center">Foto</Th>
           <Th className="text-center">Aksi</Th>
         </tr>
       </Thead>
@@ -60,6 +61,9 @@ export function TabelPendaftar({ data, loading }: TabelPendaftarProps) {
             <Td>
               <Badge status={reg.status} />
             </Td>
+            <Td className="hidden sm:table-cell text-center">
+              <FotoBadge terkirim={reg.fotoHasilTerkirim} status={reg.status} />
+            </Td>
             <Td className="text-center">
               <Link
                 href={`/admin/detail/${reg.id}`}
@@ -74,5 +78,41 @@ export function TabelPendaftar({ data, loading }: TabelPendaftarProps) {
         ))}
       </Tbody>
     </Table>
+  )
+}
+
+// ── Badge status foto ─────────────────────────────────────────────────────────
+function FotoBadge({
+  terkirim,
+  status,
+}: {
+  terkirim: boolean
+  status: RegistrasiData['status']
+}) {
+  // Hanya relevan jika sudah APPROVED atau COMPLETED
+  if (status === 'PENDING' || status === 'VALIDATED') {
+    return <span className="text-slate-300 text-xs">—</span>
+  }
+
+  if (terkirim) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full"
+        title="Foto hasil sudah dikirim"
+      >
+        <ImageIcon size={11} />
+        Terkirim
+      </span>
+    )
+  }
+
+  return (
+    <span
+      className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full"
+      title="Foto hasil belum dikirim"
+    >
+      <ImageOff size={11} />
+      Belum
+    </span>
   )
 }

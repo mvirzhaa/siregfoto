@@ -29,7 +29,7 @@ export function AdminHeader() {
           </div>
           <div>
             <span className="text-white font-bold text-base leading-none">Admin Panel</span>
-            <span className="block text-uika-300 text-xs leading-none mt-0.5">SiRegFoto UIKA</span>
+            <span className="block text-uika-300 text-xs leading-none mt-0.5">Studio BPPSI UIKA</span>
           </div>
         </Link>
 

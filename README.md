@@ -1,61 +1,56 @@
-# SiRegFoto — Registrasi Foto Ijazah & Sidik Jari UIKA
+# Studio BPPSI — Registrasi Foto Ijazah & Sidik Jari UIKA
 
-SiRegFoto adalah Sistem Registrasi Foto Ijazah dan Sidik Jari untuk mahasiswa Universitas Ibn Khaldun (UIKA) Bogor. Sistem ini dikelola oleh Biro Perencanaan, Pelaporan & Sistem Informasi (BPPSI) UIKA.
+Studio BPPSI adalah sistem registrasi foto ijazah dan sidik jari untuk mahasiswa Universitas Ibn Khaldun (UIKA) Bogor. Sistem ini dikelola oleh Biro Perencanaan, Pelaporan & Sistem Informasi (BPPSI) UIKA.
 
-Aplikasi ini dibangun menggunakan [Next.js](https://nextjs.org/) (App Router), [Tailwind CSS](https://tailwindcss.com/), dan [Prisma ORM](https://www.prisma.io/).
+Dibangun menggunakan [Next.js](https://nextjs.org/) (App Router), [Tailwind CSS](https://tailwindcss.com/), dan [Prisma ORM](https://www.prisma.io/).
 
 ## Fitur Utama
 
-- **Pendaftaran Online**: Mahasiswa dapat mendaftar untuk sesi foto dan rekam sidik jari serta memilih jadwal kedatangan.
-- **Manajemen Layanan**: Mendukung pilihan layanan (Foto + Cap 3 Jari atau hanya Cap 3 Jari).
-- **Kwitansi Digital**: Menghasilkan kwitansi dalam format PDF yang otomatis dikirim setelah sesi selesai.
-- **Notifikasi Email**: Mengirimkan konfirmasi pendaftaran langsung ke email pendaftar.
-- **Admin Dashboard**: Disediakan untuk staf BPPSI dalam mengelola data pendaftar, jadwal, dan pelaporan (termasuk export ke Excel).
+- **Pendaftaran Online** — Mahasiswa mendaftar dan memilih jadwal kedatangan.
+- **Manajemen Layanan** — Pilihan Foto + Cap 3 Jari atau hanya Cap 3 Jari.
+- **Kwitansi Digital** — PDF kwitansi dikirim otomatis ke email setelah sesi selesai.
+- **Admin Dashboard** — Kelola data pendaftar, jadwal, dan laporan (export Excel).
+- **2-Step Login Admin** — Username + password + OTP via email.
 
-## Persyaratan Sistem
+## Persyaratan
 
 - Node.js >= 18.x
-- PostgreSQL
+- PostgreSQL (atau jalankan via Docker)
 
-## Cara Memulai (Development)
-
-1. Clone repositori ini.
-2. Salin `.env.example` ke `.env` (atau `.env.local`) dan sesuaikan nilai konfigurasi di dalamnya, terutama `DATABASE_URL`.
-3. Instal dependensi:
+## Development Lokal
 
 ```bash
+# 1. Nyalakan database
+docker compose up db -d
+
+# 2. Install dependencies
 npm install
-```
 
-4. Sinkronisasikan skema Prisma dengan database:
+# 3. Migrasi database
+npx prisma migrate dev
 
-```bash
-npx prisma db push
-```
-
-5. (Opsional) Jalankan seed database jika diperlukan:
-
-```bash
+# 4. Seed master data
 npm run db:seed
-```
 
-6. Jalankan server pengembangan:
+# 5. Buat akun admin
+npm run admin:create
 
-```bash
+# 6. Jalankan dev server
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browser Anda untuk melihat aplikasi berjalan.
+Buka [http://localhost:3000](http://localhost:3000).
 
-## Script yang Tersedia
+## Script
 
-Beberapa perintah tambahan yang bisa dijalankan di dalam proyek:
+| Perintah               | Fungsi                      |
+| ---------------------- | --------------------------- |
+| `npm run dev`          | Dev server                  |
+| `npm run build`        | Build production            |
+| `npm run db:seed`      | Seed master data            |
+| `npm run admin:create` | Buat akun admin             |
+| `npm run admin:update` | Update email/password admin |
 
-- `npm run admin:create` — Membuat user admin baru (CLI).
-- `npm run admin:update` — Memperbarui password/data admin (CLI).
-- `npm run build` — Membangun aplikasi untuk production.
-- `npm run lint` — Memeriksa gaya penulisan kode (linting).
+## Deploy
 
-## Deployment
-
-Aplikasi ini dapat di-deploy ke Vercel atau menggunakan kontainer. Untuk deployment menggunakan Docker, silakan merujuk pada `docker-compose.yml` dan dokumentasi deployment yang terlampir pada `DOCKER.md` atau `DEPLOY.md`.
+Lihat panduan lengkap di [`DEPLOY.md`](./DEPLOY.md).

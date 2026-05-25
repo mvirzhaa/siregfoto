@@ -10,10 +10,12 @@ interface FilterBarProps {
   status: string
   fakultas: string
   programStudi: string
+  fotoTerkirim: string
   onSearchChange: (v: string) => void
   onStatusChange: (v: string) => void
   onFakultasChange: (v: string) => void
   onProdiChange: (v: string) => void
+  onFotoChange: (v: string) => void
   onReset: () => void
 }
 
@@ -23,8 +25,8 @@ const STATUS_OPTIONS = [
 ]
 
 export function FilterBar({
-  search, status, fakultas, programStudi,
-  onSearchChange, onStatusChange, onFakultasChange, onProdiChange, onReset,
+  search, status, fakultas, programStudi, fotoTerkirim,
+  onSearchChange, onStatusChange, onFakultasChange, onProdiChange, onFotoChange, onReset,
 }: FilterBarProps) {
   const [fakultasList, setFakultasList] = useState<MasterFakultas[]>([])
   const [prodiList, setProdiList] = useState<MasterProdi[]>([])
@@ -48,7 +50,7 @@ export function FilterBar({
       .catch(() => {})
   }, [fakultas, fakultasList])
 
-  const hasFilter = search || status !== 'ALL' || fakultas || programStudi
+  const hasFilter = search || status !== 'ALL' || fakultas || programStudi || fotoTerkirim !== 'ALL'
 
   const selectCls = 'px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-uika-700 focus:border-transparent hover:border-uika-400 transition-colors'
 
@@ -70,6 +72,16 @@ export function FilterBar({
           {STATUS_OPTIONS.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
+        </select>
+        <select
+          value={fotoTerkirim}
+          onChange={(e) => onFotoChange(e.target.value)}
+          className={`${selectCls} min-w-[160px]`}
+          title="Filter status pengiriman foto hasil"
+        >
+          <option value="ALL">— Semua Foto —</option>
+          <option value="SENT">Foto Sudah Dikirim</option>
+          <option value="NOT_SENT">Foto Belum Dikirim</option>
         </select>
       </div>
 

@@ -3,6 +3,8 @@ export type AdminStats = {
   VALIDATED?: number
   APPROVED?: number
   COMPLETED?: number
+  fotoTerkirim?: number
+  fotoBelumTerkirim?: number
 }
 
 export type PaginationMeta = {

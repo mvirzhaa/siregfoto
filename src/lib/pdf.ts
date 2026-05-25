@@ -160,7 +160,7 @@ export async function generateKwitansiPdf(data: RegistrasiForEmail): Promise<Buf
     doc.fillColor('#22c55e')
        .font('Helvetica-BoldOblique')
        .fontSize(9)
-       .text('[ VERIFIED BY SIREGFOTO ]', sigX, footerY + 60, { align: 'center', width: sigWidth })
+       .text('[ VERIFIED BY STUDIO BPPSI ]', sigX, footerY + 60, { align: 'center', width: sigWidth })
        .fillColor('#9ca3af')
        .font('Helvetica-Oblique')
        .fontSize(7.5)

@@ -57,9 +57,9 @@ export async function sendKwitansi(data: RegistrasiForEmail): Promise<void> {
   const pdfBuffer = await generateKwitansiPdf(data)
 
   await transporter.sendMail({
-    from: `"SiRegFoto UIKA" <${process.env.GMAIL_USER}>`,
+    from: `"Studio BPPSI UIKA" <${process.env.GMAIL_USER}>`,
     to: data.gmail,
-    subject: `Kwitansi Pembayaran ${data.nomorKwitansi} — SiRegFoto UIKA`,
+    subject: `Kwitansi Pembayaran ${data.nomorKwitansi} — Studio BPPSI UIKA`,
     html: htmlContent,
     attachments: [
       {
@@ -85,7 +85,7 @@ export async function sendOtpEmail(toEmail: string, otpCode: string, username: s
         <!-- Header -->
         <tr>
           <td style="background:linear-gradient(135deg,#15803d 0%,#052e16 100%);padding:24px 32px;text-align:center;">
-            <p style="margin:0;color:#ffffff;font-size:18px;font-weight:700;">SiRegFoto BPPSI UIKA</p>
+            <p style="margin:0;color:#ffffff;font-size:18px;font-weight:700;">Studio BPPSI UIKA</p>
             <p style="margin:4px 0 0;color:#bbf7d0;font-size:12px;">Kode Verifikasi Login Admin</p>
           </td>
         </tr>
@@ -119,9 +119,9 @@ export async function sendOtpEmail(toEmail: string, otpCode: string, username: s
 </html>`
 
   await transporter.sendMail({
-    from: `"SiRegFoto BPPSI UIKA" <${process.env.GMAIL_USER}>`,
+    from: `"Studio BPPSI UIKA" <${process.env.GMAIL_USER}>`,
     to: toEmail,
-    subject: `[${otpCode}] Kode Login Admin SiRegFoto`,
+    subject: `[${otpCode}] Kode Login Admin Studio BPPSI`,
     html,
   })
 }
@@ -137,9 +137,9 @@ export async function sendFotoHasil(
   const htmlContent = generateFotoHasilHtml(nama)
 
   await transporter.sendMail({
-    from: `"SiRegFoto UIKA" <${process.env.GMAIL_USER}>`,
+    from: `"Studio BPPSI UIKA" <${process.env.GMAIL_USER}>`,
     to: email,
-    subject: `Foto Hasil Cetak Ijazah — SiRegFoto UIKA`,
+    subject: `Foto Hasil Cetak Ijazah — Studio BPPSI UIKA`,
     html: htmlContent,
     attachments: [
       {

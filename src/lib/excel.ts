@@ -29,7 +29,7 @@ export async function generateLaporanExcel(
   filter?: { status?: string; dateFrom?: string; dateTo?: string; fakultas?: string; programStudi?: string }
 ): Promise<Buffer> {
   const workbook = new ExcelJS.Workbook()
-  workbook.creator = 'SiRegFoto UIKA'
+  workbook.creator = 'Studio BPPSI UIKA'
   workbook.created = new Date()
 
   const sheet = workbook.addWorksheet('Laporan Registrasi', {
@@ -43,7 +43,7 @@ export async function generateLaporanExcel(
   // ── Title Block ──────────────────────────────────────────────────────────
   sheet.mergeCells('A1:N1')
   const titleCell = sheet.getCell('A1')
-  titleCell.value = 'LAPORAN REGISTRASI — SIREGFOTO UIKA'
+  titleCell.value = 'LAPORAN REGISTRASI — STUDIO BPPSI UIKA'
   titleCell.font = { bold: true, size: 14, color: { argb: 'FF' + UIKA_GREEN } }
   titleCell.alignment = { horizontal: 'center', vertical: 'middle' }
   sheet.getRow(1).height = 28

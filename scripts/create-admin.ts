@@ -14,7 +14,7 @@ const prisma = new PrismaClient({ adapter } as ConstructorParameters<typeof Pris
 async function main() {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 
-  console.log('\n🔐 SiRegFoto BPPSI UIKA — Buat Akun Admin\n')
+  console.log('\n🔐 Studio BPPSI UIKA — Buat Akun Admin\n')
 
   const username = (await rl.question('Username    : ')).trim()
   const email    = (await rl.question('Email admin : ')).trim()

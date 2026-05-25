@@ -7,7 +7,7 @@ import { CheckCircle2, ChevronRight, AlertTriangle } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Formulir Pendaftaran — SiRegFoto BPPSI UIKA',
+  title: 'Formulir Pendaftaran — Studio BPPSI UIKA',
   description: 'Form pendaftaran foto ijazah dan scan sidik jari mahasiswa UIKA Bogor.',
 }
 

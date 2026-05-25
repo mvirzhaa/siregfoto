@@ -28,7 +28,7 @@ export function generateKwitansiHtml(data: KwitansiData): string {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kwitansi Pembayaran — SiRegFoto UIKA</title>
+  <title>Kwitansi Pembayaran — Studio BPPSI UIKA</title>
 </head>
 <body style="margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif;background:#f0fdf4;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;padding:32px 16px;">
@@ -40,7 +40,7 @@ export function generateKwitansiHtml(data: KwitansiData): string {
           <tr>
             <td style="background:linear-gradient(135deg,#15803d 0%,#166534 60%,#052e16 100%);padding:32px 40px;text-align:center;">
               <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:0.5px;">
-                SiRegFoto
+                Studio BPPSI
               </h1>
               <p style="margin:4px 0 0;color:#bbf7d0;font-size:13px;">
                 Sistem Registrasi Foto Ijazah &amp; Sidik Jari
@@ -124,7 +124,7 @@ export function generateKwitansiHtml(data: KwitansiData): string {
               <!-- Catatan -->
               <p style="margin:0;color:#6b7280;font-size:12px;line-height:1.6;">
                 <strong>PENTING:</strong> Kami telah melampirkan file <strong>Kwitansi Pembayaran Resmi (PDF)</strong> pada email ini. Silakan unduh dan simpan atau cetak sebagai bukti sah pembayaran Anda.<br/><br/>
-                Jika ada pertanyaan, hubungi admin SiRegFoto UIKA.<br/>
+                Jika ada pertanyaan, hubungi admin Studio BPPSI UIKA.<br/>
                 Email ini dikirim otomatis oleh sistem — mohon tidak membalas email ini.
               </p>
 
@@ -135,8 +135,8 @@ export function generateKwitansiHtml(data: KwitansiData): string {
           <tr>
             <td style="background:#f8fafc;border-top:1px solid #e5e7eb;padding:20px 40px;text-align:center;">
               <p style="margin:0;color:#9ca3af;font-size:11px;">
-                © ${new Date().getFullYear()} SiRegFoto — Universitas Ibn Khaldun (UIKA) Bogor<br/>
-                Sistem ini dikelola oleh Bagian Akademik UIKA.
+                © ${new Date().getFullYear()} Studio BPPSI — Universitas Ibn Khaldun (UIKA) Bogor<br/>
+                Sistem ini dikelola oleh BPPSI UIKA.
               </p>
             </td>
           </tr>
@@ -167,7 +167,7 @@ export function generateFotoHasilHtml(nama: string): string {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Foto Hasil Ijazah — SiRegFoto UIKA</title>
+  <title>Foto Hasil Ijazah — Studio BPPSI UIKA</title>
 </head>
 <body style="margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif;background:#f0fdf4;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;padding:32px 16px;">
@@ -179,7 +179,7 @@ export function generateFotoHasilHtml(nama: string): string {
           <tr>
             <td style="background:linear-gradient(135deg,#15803d 0%,#166534 60%,#052e16 100%);padding:32px 40px;text-align:center;">
               <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:0.5px;">
-                SiRegFoto
+                Studio BPPSI
               </h1>
               <p style="margin:4px 0 0;color:#bbf7d0;font-size:13px;">
                 Sistem Registrasi Foto Ijazah &amp; Sidik Jari
@@ -236,8 +236,8 @@ export function generateFotoHasilHtml(nama: string): string {
           <tr>
             <td style="background:#f8fafc;border-top:1px solid #e5e7eb;padding:20px 40px;text-align:center;">
               <p style="margin:0;color:#9ca3af;font-size:11px;">
-                © ${new Date().getFullYear()} SiRegFoto — Universitas Ibn Khaldun (UIKA) Bogor<br/>
-                Sistem ini dikelola oleh Bagian Akademik UIKA.
+                © ${new Date().getFullYear()} Studio BPPSI — Universitas Ibn Khaldun (UIKA) Bogor<br/>
+                Sistem ini dikelola oleh BPPSI UIKA.
               </p>
             </td>
           </tr>

@@ -17,7 +17,7 @@ import { formatRupiah } from '@/lib/utils'
 import { HARGA, LABEL_LAYANAN } from '@/lib/constants'
 
 export const metadata: Metadata = {
-  title: 'SiRegFoto — Registrasi Foto Ijazah & Sidik Jari UIKA',
+  title: 'Studio BPPSI — Registrasi Foto Ijazah & Sidik Jari UIKA',
   description:
     'Sistem Registrasi Foto Ijazah dan Sidik Jari mahasiswa UIKA Bogor, dikelola oleh BPPSI Universitas Ibn Khaldun.',
 }
@@ -93,7 +93,7 @@ export default function LandingPage() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-              Si<span className="text-kuning-400">Reg</span>Foto
+              Studio <span className="text-kuning-400">BPPSI</span>
             </h1>
             <p className="mt-3 text-uika-200 text-lg sm:text-xl font-medium">
               Sistem Registrasi Foto Ijazah &amp; Sidik Jari

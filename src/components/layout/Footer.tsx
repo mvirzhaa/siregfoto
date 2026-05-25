@@ -9,7 +9,7 @@ export function Footer() {
               <div className="w-7 h-7 bg-uika-gradient rounded-md flex items-center justify-center flex-shrink-0">
                 <span className="text-white font-black text-xs">SR</span>
               </div>
-              <span className="font-bold text-slate-800 text-sm">SiRegFoto</span>
+              <span className="font-bold text-slate-800 text-sm">Studio BPPSI</span>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed max-w-xs">
               Sistem Registrasi Foto Ijazah &amp; Sidik Jari<br />

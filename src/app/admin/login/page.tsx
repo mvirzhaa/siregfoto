@@ -252,7 +252,7 @@ export default function AdminLoginPage() {
             <Lock size={28} className="text-uika-900" />
           </div>
           <h1 className="text-xl font-bold text-white">Admin Panel</h1>
-          <p className="text-uika-300 text-sm mt-1">SiRegFoto BPPSI UIKA</p>
+          <p className="text-uika-300 text-sm mt-1">Studio BPPSI UIKA</p>
         </div>
 
         {/* Card */}

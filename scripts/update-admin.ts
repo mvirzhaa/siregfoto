@@ -14,7 +14,7 @@ const prisma = new PrismaClient({ adapter } as ConstructorParameters<typeof Pris
 async function main() {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 
-  console.log('\n🔧 SiRegFoto BPPSI UIKA — Update Akun Admin\n')
+  console.log('\n🔧 Studio BPPSI UIKA — Update Akun Admin\n')
 
   // Tampilkan daftar admin
   const admins = await prisma.adminUser.findMany({

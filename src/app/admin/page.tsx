@@ -21,6 +21,7 @@ export default function AdminDashboardPage() {
   const [status, setStatus] = useState('ALL')
   const [fakultas, setFakultas] = useState('')
   const [programStudi, setProgramStudi] = useState('')
+  const [fotoTerkirim, setFotoTerkirim] = useState('ALL')
   const [page, setPage] = useState(1)
 
   const fetchData = useCallback(async () => {
@@ -31,6 +32,7 @@ export default function AdminDashboardPage() {
       if (status !== 'ALL') params.set('status', status)
       if (fakultas) params.set('fakultas', fakultas)
       if (programStudi) params.set('programStudi', programStudi)
+      if (fotoTerkirim !== 'ALL') params.set('fotoTerkirim', fotoTerkirim)
 
       const res = await fetch(`/api/admin/pendaftar?${params}`)
       if (res.status === 401) { window.location.href = '/admin/login'; return }
@@ -45,7 +47,7 @@ export default function AdminDashboardPage() {
     } finally {
       setLoading(false)
     }
-  }, [search, status, fakultas, programStudi, page])
+  }, [search, status, fakultas, programStudi, fotoTerkirim, page])
 
   // Debounce search
   useEffect(() => {
@@ -57,7 +59,7 @@ export default function AdminDashboardPage() {
   useEffect(() => { fetchData() }, [fetchData]) // eslint-disable-line
 
   function handleReset() {
-    setSearch(''); setStatus('ALL'); setFakultas(''); setProgramStudi(''); setPage(1)
+    setSearch(''); setStatus('ALL'); setFakultas(''); setProgramStudi(''); setFotoTerkirim('ALL'); setPage(1)
   }
 
   return (
@@ -83,11 +85,12 @@ export default function AdminDashboardPage() {
           {/* Filter + Export */}
           <div className="flex flex-col gap-3">
             <FilterBar
-              search={search} status={status} fakultas={fakultas} programStudi={programStudi}
+              search={search} status={status} fakultas={fakultas} programStudi={programStudi} fotoTerkirim={fotoTerkirim}
               onSearchChange={setSearch}
               onStatusChange={(v) => { setStatus(v); setPage(1) }}
               onFakultasChange={(v) => { setFakultas(v); setPage(1) }}
               onProdiChange={(v) => { setProgramStudi(v); setPage(1) }}
+              onFotoChange={(v) => { setFotoTerkirim(v); setPage(1) }}
               onReset={handleReset}
             />
             <div className="flex justify-end">

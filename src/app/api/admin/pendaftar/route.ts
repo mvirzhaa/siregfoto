@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
     const search       = searchParams.get('search')
     const fakultas     = searchParams.get('fakultas')
     const programStudi = searchParams.get('programStudi')
+    const fotoTerkirim = searchParams.get('fotoTerkirim') // 'SENT' | 'NOT_SENT' | null
     const page         = parseInt(searchParams.get('page') ?? '1')
     const limit        = parseInt(searchParams.get('limit') ?? '20')
     const skip         = (page - 1) * limit
@@ -36,7 +37,12 @@ export async function GET(request: NextRequest) {
     if (programStudi)
       where.programStudi = { contains: programStudi, mode: 'insensitive' }
 
-    const [data, total, statsRaw] = await Promise.all([
+    if (fotoTerkirim === 'SENT')
+      where.fotoHasilTerkirim = true
+    else if (fotoTerkirim === 'NOT_SENT')
+      where.fotoHasilTerkirim = false
+
+    const [data, total, statsRaw, fotoStats] = await Promise.all([
       prisma.registrasi.findMany({
         where,
         orderBy: { createdAt: 'desc' },
@@ -45,9 +51,21 @@ export async function GET(request: NextRequest) {
       }),
       prisma.registrasi.count({ where }),
       prisma.registrasi.groupBy({ by: ['status'], _count: true }),
+      // Hitung foto terkirim/belum hanya untuk status APPROVED & COMPLETED
+      prisma.registrasi.groupBy({
+        by: ['fotoHasilTerkirim'],
+        _count: true,
+        where: { status: { in: ['APPROVED', 'COMPLETED'] } },
+      }),
     ])
 
     const stats = Object.fromEntries(statsRaw.map((s) => [s.status, s._count]))
+
+    // Tambahkan stat foto
+    const fotoTerkirimCount    = fotoStats.find(f => f.fotoHasilTerkirim === true)?._count ?? 0
+    const fotoBelumTerkirimCount = fotoStats.find(f => f.fotoHasilTerkirim === false)?._count ?? 0
+    stats.fotoTerkirim      = fotoTerkirimCount
+    stats.fotoBelumTerkirim = fotoBelumTerkirimCount
 
     return NextResponse.json({
       success: true,
