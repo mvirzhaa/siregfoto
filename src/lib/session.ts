@@ -11,7 +11,7 @@ export interface AdminSession {
 
 export const sessionOptions: SessionOptions = {
   password: process.env.ADMIN_SESSION_SECRET as string,
-  cookieName: 'siregfoto-admin-session',
+  cookieName: 'studio-bppsi-admin-session',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,

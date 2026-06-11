@@ -1,4 +1,4 @@
-# Panduan Deploy SiRegFoto BPPSI UIKA ke Server
+# Panduan Deploy Studio BPPSI UIKA ke Server
 
 ## Persyaratan Server
 
@@ -97,7 +97,7 @@ Isi dengan nilai production:
 
 ```env
 # Database — sesuaikan password
-DATABASE_URL="postgresql://postgres:GANTI_PASSWORD_DB@db:5432/siregfoto"
+DATABASE_URL="postgresql://postgres:GANTI_PASSWORD_DB@db:5432/studio_bppsi"
 
 ADMIN_PIN="tidak-dipakai"
 ADMIN_SESSION_SECRET="isi-dengan-string-acak-panjang-minimal-32-karakter"
@@ -107,7 +107,7 @@ GMAIL_USER="bppsi-uika@gmail.com"
 GMAIL_APP_PASSWORD="xxxx xxxx xxxx xxxx"
 
 NEXT_PUBLIC_APP_URL="https://siregfoto.uika.ac.id"
-NEXT_PUBLIC_APP_NAME="SiRegFoto UIKA"
+NEXT_PUBLIC_APP_NAME="Studio BPPSI UIKA"
 NODE_ENV="production"
 ```
 
@@ -135,7 +135,7 @@ Ganti `postgres` dengan password yang sama seperti di `DATABASE_URL` tadi. Simpa
 Juga update bagian `app` environment:
 
 ```yaml
-DATABASE_URL: postgresql://postgres:GANTI_PASSWORD_DB@db:5432/siregfoto
+DATABASE_URL: postgresql://postgres:GANTI_PASSWORD_DB@db:5432/studio_bppsi
 ```
 
 ---
@@ -164,8 +164,8 @@ Harus tampil dua container dengan status `Up` dan `healthy`:
 
 ```
 NAME             STATUS
-siregfoto_db     Up (healthy)
-siregfoto_app    Up
+studio_bppsi_db     Up (healthy)
+studio_bppsi_app    Up
 ```
 
 ### 4.4 Verifikasi aplikasi berjalan
@@ -183,13 +183,13 @@ Harus return: `{"status":"ok","database":"connected",...}`
 ### 5.1 Seed master data (fakultas & prodi)
 
 ```bash
-docker exec -it siregfoto_app npm run db:seed
+docker exec -it studio_bppsi_app npm run db:seed
 ```
 
 ### 5.2 Buat akun admin pertama
 
 ```bash
-docker exec -it siregfoto_app npx tsx scripts/create-admin.ts
+docker exec -it studio_bppsi_app npx tsx scripts/create-admin.ts
 ```
 
 Isi saat diminta:
@@ -205,7 +205,7 @@ Isi saat diminta:
 ### 6.1 Buat konfigurasi Nginx
 
 ```bash
-sudo nano /etc/nginx/sites-available/siregfoto
+sudo nano /etc/nginx/sites-available/studio-bppsi
 ```
 
 Paste konfigurasi ini (ganti domain sesuai milik Anda):
@@ -233,7 +233,7 @@ server {
 ### 6.2 Aktifkan & reload Nginx
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/siregfoto /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/studio-bppsi /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 ```
@@ -270,7 +270,7 @@ sudo ufw status
 ## Update Aplikasi (saat ada perubahan kode)
 
 ```bash
-cd /opt/siregfoto
+cd /opt/studio-bppsi
 
 # Pull kode terbaru
 git pull origin main
@@ -303,22 +303,22 @@ docker compose logs app -f
 docker compose restart app
 
 # Masuk ke shell container app
-docker exec -it siregfoto_app sh
+docker exec -it studio_bppsi_app sh
 
 # Masuk ke database PostgreSQL
-docker exec -it siregfoto_db psql -U postgres -d siregfoto
+docker exec -it studio_bppsi_db psql -U postgres -d studio_bppsi
 
 # Backup database
-docker exec siregfoto_db pg_dump -U postgres siregfoto > backup_$(date +%Y%m%d_%H%M).sql
+docker exec studio_bppsi_db pg_dump -U postgres studio_bppsi > backup_$(date +%Y%m%d_%H%M).sql
 
 # Restore dari backup
-docker exec -i siregfoto_db psql -U postgres siregfoto < backup_20250101_1200.sql
+docker exec -i studio_bppsi_db psql -U postgres studio_bppsi < backup_20250101_1200.sql
 
 # Update email/password admin
-docker exec -it siregfoto_app npm run admin:update
+docker exec -it studio_bppsi_app npm run admin:update
 
 # Tambah akun admin baru
-docker exec -it siregfoto_app npx tsx scripts/create-admin.ts
+docker exec -it studio_bppsi_app npx tsx scripts/create-admin.ts
 ```
 
 ---
@@ -330,7 +330,7 @@ docker exec -it siregfoto_app npx tsx scripts/create-admin.ts
 | App tidak muncul di browser  | `docker compose logs app` — cari baris ERROR                                            |
 | Database tidak terkoneksi    | `docker compose ps` — pastikan `db` statusnya `healthy`                                 |
 | OTP email tidak masuk        | Cek `GMAIL_USER` dan `GMAIL_APP_PASSWORD` di `.env`. Pastikan Gmail App Password aktif. |
-| Migrasi gagal saat startup   | `docker exec -it siregfoto_app npx prisma migrate deploy`                               |
+| Migrasi gagal saat startup   | `docker exec -it studio_bppsi_app npx prisma migrate deploy`                               |
 | SSL error / expired          | `sudo certbot renew --dry-run` lalu `sudo certbot renew`                                |
 | Port 3000 tidak bisa diakses | Pastikan Nginx sudah reload dan konfigurasi proxy_pass benar                            |
 

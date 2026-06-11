@@ -1,4 +1,4 @@
-# Docker — SiRegFoto UIKA
+# Docker — Studio BPPSI UIKA
 
 ## Catatan Penting
 
@@ -61,7 +61,7 @@ docker compose down -v
 docker compose ps
 
 # Masuk ke container DB
-docker exec -it siregfoto_db psql -U postgres -d siregfoto
+docker exec -it studio_bppsi_db psql -U postgres -d studio_bppsi
 
 # Lihat log DB
 docker compose logs db -f

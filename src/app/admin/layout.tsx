@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Admin Panel — SiRegFoto UIKA',
+  title: 'Admin Panel — Studio BPPSI UIKA',
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

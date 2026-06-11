@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       programStudi: programStudi ?? undefined,
     })
 
-    const fileName = `Laporan_SiRegFoto_${format(new Date(), 'yyyyMMdd_HHmm')}.xlsx`
+    const fileName = `Laporan_StudioBPPSI_${format(new Date(), 'yyyyMMdd_HHmm')}.xlsx`
 
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,

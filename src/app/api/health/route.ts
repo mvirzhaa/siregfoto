@@ -10,7 +10,7 @@ export async function GET() {
       status: 'ok',
       timestamp: new Date().toISOString(),
       database: 'connected',
-      app: process.env.NEXT_PUBLIC_APP_NAME ?? 'SiRegFoto UIKA',
+      app: process.env.NEXT_PUBLIC_APP_NAME ?? 'Studio BPPSI UIKA',
     })
   } catch (error) {
     console.error('[API /health GET]', error)

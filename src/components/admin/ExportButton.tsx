@@ -39,7 +39,7 @@ export function ExportButton({ status, dateFrom, dateTo, fakultas, programStudi 
       const a = document.createElement('a')
       const disposition = res.headers.get('Content-Disposition') ?? ''
       const match = disposition.match(/filename="(.+)"/)
-      a.download = match ? match[1] : 'Laporan_SiRegFoto.xlsx'
+      a.download = match ? match[1] : 'Laporan_StudioBPPSI.xlsx'
       a.href = url
       a.click()
       URL.revokeObjectURL(url)
