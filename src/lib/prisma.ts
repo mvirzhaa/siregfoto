@@ -7,11 +7,10 @@ const globalForPrisma = globalThis as unknown as {
 
 function createPrismaClient() {
   const databaseUrl = process.env.DATABASE_URL
-  if (!databaseUrl) {
-    throw new Error('DATABASE_URL tidak dikonfigurasi di .env.local')
-  }
+  // Gunakan dummy URL saat build time jika DATABASE_URL tidak diset (diabaikan oleh .dockerignore)
+  const connectionString = databaseUrl || 'postgresql://postgres:postgres@db:5432/studio_bppsi'
 
-  const adapter = new PrismaPg({ connectionString: databaseUrl })
+  const adapter = new PrismaPg({ connectionString })
 
   return new PrismaClient({
     adapter,
