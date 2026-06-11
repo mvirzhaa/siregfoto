@@ -35,7 +35,7 @@ export default function AdminDashboardPage() {
       if (fotoTerkirim !== 'ALL') params.set('fotoTerkirim', fotoTerkirim)
 
       const res = await fetch(`/api/admin/pendaftar?${params}`)
-      if (res.status === 401) { window.location.href = '/admin/login'; return }
+      if (res.status === 401) { window.location.href = '/studio/admin/login'; return }
       const json = await res.json()
       if (json.success) {
         setData(json.data)

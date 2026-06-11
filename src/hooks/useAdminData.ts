@@ -43,7 +43,7 @@ export function useAdminData({
 
       if (res.status === 401) {
         if (typeof window !== 'undefined') {
-          window.location.href = '/admin/login'
+          window.location.href = '/studio/admin/login'
         }
         return
       }

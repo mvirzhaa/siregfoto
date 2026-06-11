@@ -22,6 +22,27 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var originFetch = window.fetch;
+                window.fetch = function(input, init) {
+                  if (typeof input === 'string' && input.startsWith('/api/')) {
+                    return originFetch('/studio' + input, init);
+                  }
+                  if (input && typeof input === 'object' && typeof input.url === 'string' && input.url.startsWith('/api/')) {
+                    var newUrl = '/studio' + input.url;
+                    return originFetch(newUrl, init);
+                  }
+                  return originFetch(input, init);
+                };
+              })();
+            `
+          }}
+        />
+      </head>
       <body className={`${poppins.variable} font-sans antialiased bg-slate-50`}>
         <Toaster
           position="top-right"
