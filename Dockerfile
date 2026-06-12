@@ -38,6 +38,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder /app/node_modules/effect ./node_modules/effect
 
 # Gunakan prisma.config.js (plain CommonJS) agar tidak perlu load TypeScript di runtime
 COPY prisma.config.production.js ./prisma.config.js
