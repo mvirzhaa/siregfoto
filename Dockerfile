@@ -33,12 +33,11 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy Prisma untuk migration saat startup
+# Copy Prisma schema untuk migration saat startup
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/effect ./node_modules/effect
+
+# Copy SEMUA node_modules dari builder agar Prisma CLI dapat berjalan dengan semua dependency-nya
+COPY --from=builder /app/node_modules ./node_modules
 
 # Gunakan prisma.config.js (plain CommonJS) agar tidak perlu load TypeScript di runtime
 COPY prisma.config.production.js ./prisma.config.js
